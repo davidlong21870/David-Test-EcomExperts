@@ -241,7 +241,8 @@
                               </button>
                             {%- endif -%}
                             <quantity-input class="quantity cart-quantity">
-                              <button class="quantity__button no-js-hidden" name="minus" type="button">
+                              <button class="quantity__button no-js-hidden
+                                {% if item.product.title == 'Soft Winter Jacket' %} hidden {% endif %}" name="minus" type="button">
                                 <span class="visually-hidden">
                                   {{- 'products.product.quantity.decrease' | t: product: item.product.title | escape -}}
                                 </span>
@@ -264,8 +265,12 @@
                                 aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
                                 id="Quantity-{{ item.index | plus: 1 }}"
                                 data-index="{{ item.index | plus: 1 }}"
+                                {% if item.product.title == 'Soft Winter Jacket' %}
+                                  disabled
+                                {% endif %}
                               >
-                              <button class="quantity__button no-js-hidden" name="plus" type="button">
+                              <button class="quantity__button no-js-hidden
+                                {% if item.product.title == 'Soft Winter Jacket' %} hidden {% endif %}" name="plus" type="button">
                                 <span class="visually-hidden">
                                   {{- 'products.product.quantity.increase' | t: product: item.product.title | escape -}}
                                 </span>
@@ -276,6 +281,7 @@
                           <cart-remove-button
                             id="Remove-{{ item.index | plus: 1 }}"
                             data-index="{{ item.index | plus: 1 }}"
+                            class="{% if item.product.title == 'Soft Winter Jacket' %} hidden {% endif %}"
                           >
                             <a
                               href="{{ item.url_to_remove }}"
@@ -369,7 +375,7 @@
                             {%- endif -%}
                           </div>
                         {%- endif -%}
-                        <div class="cart-item__error" id="Line-item-error-{{ item.index | plus: 1 }}" role="alert">
+                        <div class="cart-item__error {% if item.product.title == 'Soft Winter Jacket' %} hidden {% endif %}" id="Line-item-error-{{ item.index | plus: 1 }}" role="alert">
                           <small class="cart-item__error-text"></small>
                           <svg
                             aria-hidden="true"

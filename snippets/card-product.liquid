@@ -35,7 +35,7 @@
       assign ratio = 1
     endif
   -%}
-  <div class="card-wrapper product-card-wrapper underline-links-hover">
+  <div class="card-wrapper product-card-wrapper underline-links-hover {% if card_product.title == 'Soft Winter Jacket' %} hidden {% endif %}">
     <div
       class="
         card card--{{ settings.card_style }}

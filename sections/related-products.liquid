@@ -34,7 +34,8 @@
         role="list"
       >
         {% for recommendation in recommendations.products %}
-          <li class="grid__item">
+          {% unless recommendation.title == 'Soft Winter Jacket' %}
+          <li class="grid__item {% if recommendation.title == 'Soft Winter Jacket' %} hidden {% endif %}">
             {% render 'card-product',
               card_product: recommendation,
               media_aspect_ratio: section.settings.image_ratio,
@@ -44,6 +45,7 @@
               show_rating: section.settings.show_rating
             %}
           </li>
+          {% endunless %}
         {% endfor %}
       </ul>
     {% endif %}

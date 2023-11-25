@@ -119,7 +119,7 @@
         {%- for variant in product.variants -%}
           <option
             {% if variant == product.selected_or_first_available_variant %}
-              selected="selected"
+              selected
             {% endif %}
             {% if variant.available == false %}
               disabled

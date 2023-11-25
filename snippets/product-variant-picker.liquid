@@ -138,6 +138,8 @@
 </noscript>
 
 <script>
+
+  // set Unselected value before refresh page
   window.addEventListener("beforeunload",function() {
     var title = '{{ product.title }}';
     var size = document.getElementById("Option-{{ section.id }}-1");

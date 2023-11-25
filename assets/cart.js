@@ -168,8 +168,9 @@ class CartItems extends HTMLElement {
         }
 
         publish(PUB_SUB_EVENTS.cartUpdate, { source: 'cart-items', cartData: parsedState, variantId: variantId });
-          // black/medium handbag variant id
-          if (variantId == '40571489910865') {
+        // change quantity of soft winter jacket and black/medium handbag together.  
+        // black/medium handbag variant id
+        if (variantId == '40571489910865') {
           // soft winter jacket variant id
           const swjVariantId = '40564934705233';
           var softWinterJacket = document.querySelector('[data-quantity-variant-id="' + swjVariantId + '"]'); 

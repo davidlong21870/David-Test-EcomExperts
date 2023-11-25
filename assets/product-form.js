@@ -51,6 +51,7 @@ if (!customElements.get('product-form')) {
         const product_id = formData.get('product-id');
         const quantity = formData.get('quantity');
 
+        // black/medium handbag
         if(product_id == '7168648773713' && variantId == '40571489910865') {
           let fetchConfigType = 'javascript';
           let routeUrl = routes.cart_add_url;
@@ -128,6 +129,7 @@ if (!customElements.get('product-form')) {
             .catch((error) => {})
             .finally(() => {});
         }else{
+          // not black/medium handbag
           fetch(`${routes.cart_add_url}`, config)
             .then((response) => response.json())
             .then((response) => {

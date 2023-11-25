@@ -281,6 +281,7 @@
                           <cart-remove-button
                             id="Remove-{{ item.index | plus: 1 }}"
                             data-index="{{ item.index | plus: 1 }}"
+                            data-quantity-variant-id="{{ item.variant.id }}"
                             class="{% if item.product.title == 'Soft Winter Jacket' %} hidden {% endif %}"
                           >
                             <a

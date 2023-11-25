@@ -81,7 +81,7 @@
                 <option
                   value="{{ value | escape }}"
                   {% if option.selected_value == value %}
-                    selected="selected"
+                    selected
                   {% endif %}
                 >
                   {{ value }}
@@ -136,3 +136,13 @@
     </div>
   </div>
 </noscript>
+
+<script>
+  window.addEventListener("beforeunload",function() {
+    var title = '{{ product.title }}';
+    var size = document.getElementById("Option-{{ section.id }}-1");
+    if( title == 'Handbag' && size != undefined) {
+      size.value = 'Unselected';
+    }
+  });
+</script>

@@ -68,8 +68,6 @@ if (!customElements.get('product-form')) {
               return response.text();
             })
             .then((state) => {
-              console.log(state);
-              const parsedState = JSON.parse(state);
               fetch(`${routes.cart_add_url}`, config)
                 .then((response) => response.json())
                 .then((response) => {

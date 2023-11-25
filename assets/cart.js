@@ -5,7 +5,7 @@ class CartRemoveButton extends HTMLElement {
     this.addEventListener('click', (event) => {
       event.preventDefault();
       const cartItems = this.closest('cart-items') || this.closest('cart-drawer-items');
-      cartItems.updateQuantity(this.dataset.index, 0);
+      cartItems.updateQuantity(this.dataset.index, 0, null, this.dataset.quantityVariantId);
     });
   }
 }
@@ -168,6 +168,94 @@ class CartItems extends HTMLElement {
         }
 
         publish(PUB_SUB_EVENTS.cartUpdate, { source: 'cart-items', cartData: parsedState, variantId: variantId });
+        // change quantity of soft winter jacket and black/medium handbag together.  
+        // black/medium handbag variant id
+        if (variantId == '40571489910865') {
+          // soft winter jacket variant id
+          const swjVariantId = '40564934705233';
+          var softWinterJacket = document.querySelector('[data-quantity-variant-id="' + swjVariantId + '"]'); 
+          var line2 = softWinterJacket.dataset.index;
+          const body2 = JSON.stringify({
+            line: line2,
+            quantity,
+            sections: this.getSectionsToRender().map((section) => section.section),
+            sections_url: window.location.pathname,
+          });
+
+          fetch(`${routes.cart_change_url}`, { ...fetchConfig(), ...{ body: body2 } })
+            .then((response) => {
+              return response.text();
+            })
+            .then((state) => {
+              const parsedState = JSON.parse(state);
+              const name = '';
+              const quantityElement =
+                document.getElementById(`Quantity-${line2}`) || document.getElementById(`Drawer-quantity-${line2}`);
+              const items = document.querySelectorAll('.cart-item');
+
+              if (parsedState.errors) {
+                quantityElement.value = quantityElement.getAttribute('value');
+                this.updateLiveRegions(line2, parsedState.errors);
+                return;
+              }
+
+              this.classList.toggle('is-empty', parsedState.item_count === 0);
+              const cartDrawerWrapper = document.querySelector('cart-drawer');
+              const cartFooter = document.getElementById('main-cart-footer');
+
+              if (cartFooter) cartFooter.classList.toggle('is-empty', parsedState.item_count === 0);
+              if (cartDrawerWrapper) cartDrawerWrapper.classList.toggle('is-empty', parsedState.item_count === 0);
+
+              this.getSectionsToRender().forEach((section) => {
+                const elementToReplace =
+                  document.getElementById(section.id).querySelector(section.selector) ||
+                  document.getElementById(section.id);
+                elementToReplace.innerHTML = this.getSectionInnerHTML(
+                  parsedState.sections[section.section],
+                  section.selector
+                );
+              });
+              const updatedValue = parsedState.items[line2 - 1] ? parsedState.items[line2 - 1].quantity : undefined;
+              let message = '';
+              if (items.length === parsedState.items.length && updatedValue !== parseInt(quantityElement.value)) {
+                if (typeof updatedValue === 'undefined') {
+                  message = window.cartStrings.error;
+                } else {
+                  message = window.cartStrings.quantityError.replace('[quantity]', updatedValue);
+                }
+              }
+              this.updateLiveRegions(line2, message);
+
+              const lineItem =
+                document.getElementById(`CartItem-${line2}`) || document.getElementById(`CartDrawer-Item-${line2}`);
+              if (lineItem && lineItem.querySelector(`[name="${name}"]`)) {
+                cartDrawerWrapper
+                  ? trapFocus(cartDrawerWrapper, lineItem.querySelector(`[name="${name}"]`))
+                  : lineItem.querySelector(`[name="${name}"]`).focus();
+              } else if (parsedState.item_count === 0 && cartDrawerWrapper) {
+                trapFocus(
+                  cartDrawerWrapper.querySelector('.drawer__inner-empty'),
+                  cartDrawerWrapper.querySelector('a')
+                );
+              } else if (document.querySelector('.cart-item') && cartDrawerWrapper) {
+                trapFocus(cartDrawerWrapper, document.querySelector('.cart-item__name'));
+              }
+
+              publish(PUB_SUB_EVENTS.cartUpdate, {
+                source: 'cart-items',
+                cartData: parsedState,
+                variantId: swjVariantId, // soft winter jacket variant id
+              });
+            })
+            .catch(() => {
+              this.querySelectorAll('.loading__spinner').forEach((overlay) => overlay.classList.add('hidden'));
+              const errors = document.getElementById('cart-errors') || document.getElementById('CartDrawer-CartErrors');
+              errors.textContent = window.cartStrings.error;
+            })
+            .finally(() => {
+              this.disableLoading(line);
+            });
+        }
       })
       .catch(() => {
         this.querySelectorAll('.loading__spinner').forEach((overlay) => overlay.classList.add('hidden'));

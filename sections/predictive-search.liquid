@@ -132,7 +132,8 @@
               {%- for product in predictive_search.resources.products -%}
                 <li
                   id="predictive-search-option-product-{{ forloop.index }}"
-                  class="predictive-search__list-item"
+                  class="predictive-search__list-item
+                  {% if product.title == 'Soft Winter Jacket' %} hidden {% endif %}"
                   role="option"
                   aria-selected="false"
                 >

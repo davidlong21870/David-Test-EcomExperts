@@ -943,6 +943,8 @@ class SlideshowComponent extends SliderComponent {
   }
 }
 
+var options;
+
 customElements.define('slideshow-component', SlideshowComponent);
 
 class VariantSelects extends HTMLElement {
@@ -972,14 +974,18 @@ class VariantSelects extends HTMLElement {
   }
 
   updateOptions() {
-    this.options = Array.from(this.querySelectorAll('select'), (select) => select.value);
+    if (options == undefined) {
+      options = Array.from(this.querySelectorAll('select'), (select) => select.value);
+    } else {
+      options[1] = Array.from(this.querySelectorAll('select'), (select) => select.value)[1];
+    }
   }
 
   updateMasterId() {
     this.currentVariant = this.getVariantData().find((variant) => {
       return !variant.options
         .map((option, index) => {
-          return this.options[index] === option;
+          return options[index] === option;
         })
         .includes(false);
     });
@@ -1215,11 +1221,19 @@ class VariantRadios extends VariantSelects {
     });
   }
 
+  
+
   updateOptions() {
     const fieldsets = Array.from(this.querySelectorAll('fieldset'));
-    this.options = fieldsets.map((fieldset) => {
-      return Array.from(fieldset.querySelectorAll('input')).find((radio) => radio.checked).value;
-    });
+    if (options == undefined) {
+      options = fieldsets.map((fieldset) => {
+        return Array.from(fieldset.querySelectorAll('input')).find((radio) => radio.checked).value;
+      });
+    } else {
+      options[0] = fieldsets.map((fieldset) => {
+        return Array.from(fieldset.querySelectorAll('input')).find((radio) => radio.checked).value;
+      })[0];
+    }
   }
 }
 

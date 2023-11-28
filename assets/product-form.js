@@ -20,12 +20,6 @@ if (!customElements.get('product-form')) {
         evt.preventDefault();
         if (this.submitButton.getAttribute('aria-disabled') === 'true') return;
 
-        this.handleErrorMessage();
-
-        this.submitButton.setAttribute('aria-disabled', true);
-        this.submitButton.classList.add('loading');
-        this.querySelector('.loading__spinner').classList.remove('hidden');
-
         const config = fetchConfig('javascript');
         config.headers['X-Requested-With'] = 'XMLHttpRequest';
         delete config.headers['Content-Type'];
@@ -46,6 +40,19 @@ if (!customElements.get('product-form')) {
 
         // 40571489910865 handbag black medium variant id
         // 7168648773713 handbag product id
+
+        const size = formData.get('options[Size]');
+        console.log(size);
+        if(size == 'Unselected') {
+          this.handleErrorMessage('Please select Size');
+          return ;
+        }
+
+        this.handleErrorMessage();
+
+        this.submitButton.setAttribute('aria-disabled', true);
+        this.submitButton.classList.add('loading');
+        this.querySelector('.loading__spinner').classList.remove('hidden');
 
         const variantId = formData.get('id');
         const product_id = formData.get('product-id');
